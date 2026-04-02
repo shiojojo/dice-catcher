@@ -1,0 +1,24 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Export
+export_presets.cfg
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+
+# Exported builds
+*.apk
+*.aab
+*.exe
+*.app
+*.dmg
+*.zip
+*.pck
+*.ipa
