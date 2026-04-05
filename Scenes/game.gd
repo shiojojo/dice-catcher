@@ -21,6 +21,8 @@ func spawn_dice_at(spawn_pos: Vector2) -> Dice:
 	var dice: Dice = DiceScene.instantiate()
 	dice.position = spawn_pos
 	add_child(dice)
+	# register spawned dice to the global stoppable group
+	dice.add_to_group("global_group")
 	dice.connect("game_over", Callable(self , "_on_dice_game_over"))
 	return dice
 
@@ -39,10 +41,27 @@ func _spawn_dice() -> void:
 	spawn_dice_at(pos)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
-
-
 func _on_dice_game_over() -> void:
-	print("Game Over")
+	pause_all()
+
+
+func pause_all(group_name: String = "global_group") -> void:
+	# Stop the spawn timer if present (it may not be in the group)
+	if has_node("SpawnTimer") and $SpawnTimer is Timer:
+		$SpawnTimer.stop()
+
+	var nodes := get_tree().get_nodes_in_group(group_name)
+	for n in nodes:
+		if n is Node:
+			# Stop Timer nodes so time-based callbacks don't continue
+			# if n is Timer:
+			# 	n.stop()
+			# Stop physics processing (Dice uses _physics_process)
+			n.set_physics_process(false)
+
+	# Optionally pause the entire SceneTree instead of per-node processing
+	# get_tree().paused = true
+	
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("restart"):
+		get_tree().reload_current_scene()
