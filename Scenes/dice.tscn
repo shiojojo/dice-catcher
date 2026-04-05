@@ -5,6 +5,7 @@
 [ext_resource type="Shape2D" uid="uid://c4mc2cc337c4h" path="res://Resources/DiceCollisionShap.tres" id="2_7cx2c"]
 
 [node name="Dice" type="Area2D" unique_id=694492631]
+position = Vector2(0, 36)
 script = ExtResource("1_3jar1")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1235182655]

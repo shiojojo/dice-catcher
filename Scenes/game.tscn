@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://cbj3hlxpb72bx"]
 
 [ext_resource type="Texture2D" uid="uid://b80q3uvxslwbq" path="res://Assets/GemBg.png" id="1_qxrlw"]
+[ext_resource type="Script" uid="uid://pc6tj7mr3muo" path="res://Scenes/game.gd" id="1_wrm1d"]
 [ext_resource type="PackedScene" uid="uid://cw5e8v71cm0k" path="res://Scenes/dice.tscn" id="2_wrm1d"]
 
 [node name="Game" type="Node2D" unique_id=103968909]
+script = ExtResource("1_wrm1d")
 
 [node name="GemBg" type="Sprite2D" parent="." unique_id=1925791692]
 scale = Vector2(0.7, 0.7)
