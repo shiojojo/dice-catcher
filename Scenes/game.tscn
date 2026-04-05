@@ -8,7 +8,7 @@
 script = ExtResource("1_wrm1d")
 
 [node name="GemBg" type="Sprite2D" parent="." unique_id=1925791692]
-scale = Vector2(0.7, 0.7)
+scale = Vector2(0.64843744, 0.62777776)
 texture = ExtResource("1_qxrlw")
 centered = false
 
@@ -17,4 +17,5 @@ wait_time = 2.0
 autostart = true
 
 [node name="Fox" parent="." unique_id=1159394860 instance=ExtResource("3_wrm1d")]
-position = Vector2(240, 672)
+z_index = 1
+position = Vector2(231, 553)

@@ -20,10 +20,8 @@ func _ready() -> void:
 func spawn_dice_at(spawn_pos: Vector2) -> Dice:
 	var dice: Dice = DiceScene.instantiate()
 	dice.position = spawn_pos
-	add_child(dice)
-	# register spawned dice to the global stoppable group
-	dice.add_to_group("global_group")
 	dice.connect("game_over", Callable(self , "_on_dice_game_over"))
+	add_child(dice)
 	return dice
 
 
@@ -45,7 +43,7 @@ func _on_dice_game_over() -> void:
 	pause_all()
 
 
-func pause_all(group_name: String = "global_group") -> void:
+func pause_all(group_name: String = "stoppable") -> void:
 	# Stop the spawn timer if present (it may not be in the group)
 	if has_node("SpawnTimer") and $SpawnTimer is Timer:
 		$SpawnTimer.stop()

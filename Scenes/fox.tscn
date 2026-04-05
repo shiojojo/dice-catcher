@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://bnmoul4mbvxt1"]
 
 [ext_resource type="Texture2D" uid="uid://csw6c872wsvi7" path="res://Assets/Fox.png" id="1_fslue"]
+[ext_resource type="Script" uid="uid://cqbjjkmq4wtn3" path="res://Scenes/fox.gd" id="1_yj2lq"]
 [ext_resource type="AudioStream" uid="uid://d3dvsa6knfxuo" path="res://Assets/eating.wav" id="2_e6g21"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_e6g21"]
 height = 94.0
 
-[node name="Fox" type="Area2D" unique_id=1159394860]
+[node name="Fox" type="Area2D" unique_id=1159394860 groups=["stoppable"]]
+script = ExtResource("1_yj2lq")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=277426991]
 texture = ExtResource("1_fslue")
