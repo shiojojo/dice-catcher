@@ -2,7 +2,6 @@
 
 [ext_resource type="Texture2D" uid="uid://b80q3uvxslwbq" path="res://Assets/GemBg.png" id="1_qxrlw"]
 [ext_resource type="Script" uid="uid://pc6tj7mr3muo" path="res://Scenes/game.gd" id="1_wrm1d"]
-[ext_resource type="PackedScene" uid="uid://cw5e8v71cm0k" path="res://Scenes/dice.tscn" id="2_wrm1d"]
 
 [node name="Game" type="Node2D" unique_id=103968909]
 script = ExtResource("1_wrm1d")
@@ -12,14 +11,6 @@ scale = Vector2(0.7, 0.7)
 texture = ExtResource("1_qxrlw")
 centered = false
 
-[node name="Dice" parent="." unique_id=694492631 instance=ExtResource("2_wrm1d")]
-position = Vector2(225.99998, 194.99998)
-scale = Vector2(0.7, 0.7)
-
-[node name="Dice2" parent="." unique_id=2101458335 instance=ExtResource("2_wrm1d")]
-position = Vector2(788.99994, 187)
-scale = Vector2(0.7, 0.7)
-
-[node name="Dice3" parent="." unique_id=1878421884 instance=ExtResource("2_wrm1d")]
-position = Vector2(522, 118.00001)
-scale = Vector2(0.7, 0.7)
+[node name="SpawnTimer" type="Timer" parent="." unique_id=1135528382]
+wait_time = 2.0
+autostart = true
