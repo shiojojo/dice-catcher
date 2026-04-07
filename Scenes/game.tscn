@@ -29,15 +29,18 @@ offset_top = 29.0
 offset_right = 65.0
 offset_bottom = 52.0
 text = "Score"
+process_mode = 3
 label_settings = SubResource("LabelSettings_wowpa")
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=1661513175]
 stream = ExtResource("5_wowpa")
 autoplay = true
 parameters/looping = true
+process_mode = 3
 
 [node name="GameOver" type="AudioStreamPlayer" parent="." unique_id=1987654321]
 stream = ExtResource("6_gameov")
+process_mode = 3
 
 [node name="Pausable" type="Node" parent="." unique_id=1329609009]
 process_mode = 1
