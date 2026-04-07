@@ -4,6 +4,8 @@ extends Node2D
 const DiceScene: PackedScene = preload("res://Scenes/dice.tscn")
 
 var rng := RandomNumberGenerator.new()
+var score: int = 0
+@export var score_label_path: NodePath = NodePath("")
 const SPAWN_MARGIN: int = 50
 
 
@@ -15,6 +17,13 @@ func _ready() -> void:
 		st.connect("timeout", Callable(self , "_spawn_dice"))
 	else:
 		_spawn_dice()
+	# connect Fox ate_dice signal to update score
+	if has_node("Fox"):
+		var fox_node := $Fox
+		if not fox_node.is_connected("ate_dice", Callable(self , "_on_fox_ate_dice")):
+			fox_node.connect("ate_dice", Callable(self , "_on_fox_ate_dice"))
+	# initialize score label display (shows 0000 initially)
+	_update_score_label()
 
 
 func spawn_dice_at(spawn_pos: Vector2) -> Dice:
@@ -40,6 +49,18 @@ func _spawn_dice() -> void:
 
 
 func _on_dice_game_over() -> void:
+	# Stop background music if present
+	if has_node("Music") and $Music is AudioStreamPlayer:
+		$Music.stop()
+
+	# Play game over sound (one-shot)
+	var sfx := AudioStreamPlayer.new()
+	var over_stream = load("res://Assets/game_over.wav")
+	if over_stream:
+		sfx.stream = over_stream
+		add_child(sfx)
+		sfx.play()
+
 	pause_all()
 
 
@@ -63,3 +84,16 @@ func pause_all(group_name: String = "stoppable") -> void:
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
+
+
+func _on_fox_ate_dice(points: int) -> void:
+	score += points
+	_update_score_label()
+
+
+func _update_score_label() -> void:
+	var lbl := get_node_or_null(score_label_path)
+	if lbl == null:
+		lbl = get_node_or_null("ScoreLabel")
+	if lbl and lbl is Label:
+		lbl.text = "%04d" % score

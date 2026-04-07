@@ -3,6 +3,16 @@
 [ext_resource type="Texture2D" uid="uid://b80q3uvxslwbq" path="res://Assets/GemBg.png" id="1_qxrlw"]
 [ext_resource type="Script" uid="uid://pc6tj7mr3muo" path="res://Scenes/game.gd" id="1_wrm1d"]
 [ext_resource type="PackedScene" uid="uid://bnmoul4mbvxt1" path="res://Scenes/fox.tscn" id="3_wrm1d"]
+[ext_resource type="FontFile" uid="uid://11dqfr8hp4i1" path="res://Assets/LuckiestGuy-Regular.ttf" id="4_3dryh"]
+[ext_resource type="AudioStream" uid="uid://sskq60tot855" path="res://Assets/tetris.mp3" id="5_wowpa"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wowpa"]
+font = ExtResource("4_3dryh")
+font_size = 40
+outline_size = 4
+outline_color = Color(0.11764706, 0.11764706, 0.11764706, 1)
+shadow_size = 7
+shadow_color = Color(0.11372549, 0.11372549, 0.11372549, 0.78039217)
 
 [node name="Game" type="Node2D" unique_id=103968909]
 script = ExtResource("1_wrm1d")
@@ -19,3 +29,16 @@ autostart = true
 [node name="Fox" parent="." unique_id=1159394860 instance=ExtResource("3_wrm1d")]
 z_index = 1
 position = Vector2(231, 553)
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=1766124172]
+offset_left = 25.0
+offset_top = 29.0
+offset_right = 65.0
+offset_bottom = 52.0
+text = "Score"
+label_settings = SubResource("LabelSettings_wowpa")
+
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=1661513175]
+stream = ExtResource("5_wowpa")
+autoplay = true
+parameters/looping = true

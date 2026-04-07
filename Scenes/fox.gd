@@ -1,6 +1,7 @@
 extends Area2D
 class_name fox
 
+signal ate_dice(points: int)
 
 @export var speed: float = 400.0
 
@@ -30,4 +31,5 @@ func _on_area_entered(area: Area2D) -> void:
 	if area is Dice:
 		if has_node("AudioStreamPlayer2D") and $AudioStreamPlayer2D is AudioStreamPlayer2D:
 			$AudioStreamPlayer2D.play()
+		emit_signal("ate_dice", 1)
 		area.queue_free()
