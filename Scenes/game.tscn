@@ -6,6 +6,8 @@
 [ext_resource type="FontFile" uid="uid://11dqfr8hp4i1" path="res://Assets/LuckiestGuy-Regular.ttf" id="4_3dryh"]
 [ext_resource type="AudioStream" uid="uid://sskq60tot855" path="res://Assets/tetris.mp3" id="5_wowpa"]
 
+[ext_resource type="AudioStream" uid="uid://gameover_audio" path="res://Assets/game_over.wav" id="6_gameov"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_wowpa"]
 font = ExtResource("4_3dryh")
 font_size = 40
@@ -42,3 +44,6 @@ label_settings = SubResource("LabelSettings_wowpa")
 stream = ExtResource("5_wowpa")
 autoplay = true
 parameters/looping = true
+
+[node name="GameOver" type="AudioStreamPlayer" parent="." unique_id=1987654321]
+stream = ExtResource("6_gameov")
