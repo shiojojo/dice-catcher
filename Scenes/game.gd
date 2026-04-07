@@ -53,13 +53,9 @@ func _on_dice_game_over() -> void:
 	if has_node("Music") and $Music is AudioStreamPlayer:
 		$Music.stop()
 
-	# Play game over sound (one-shot)
-	var sfx := AudioStreamPlayer.new()
-	var over_stream = load("res://Assets/game_over.wav")
-	if over_stream:
-		sfx.stream = over_stream
-		add_child(sfx)
-		sfx.play()
+	# Play game over sound using the scene's persistent player
+	if has_node("GameOver") and $GameOver is AudioStreamPlayer:
+		$GameOver.play()
 
 	pause_all()
 
