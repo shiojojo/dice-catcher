@@ -5,8 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bnmoul4mbvxt1" path="res://Scenes/fox.tscn" id="3_wrm1d"]
 [ext_resource type="FontFile" uid="uid://11dqfr8hp4i1" path="res://Assets/LuckiestGuy-Regular.ttf" id="4_3dryh"]
 [ext_resource type="AudioStream" uid="uid://sskq60tot855" path="res://Assets/tetris.mp3" id="5_wowpa"]
-
-[ext_resource type="AudioStream" uid="uid://gameover_audio" path="res://Assets/game_over.wav" id="6_gameov"]
+[ext_resource type="AudioStream" uid="uid://ce5jiineqxn3s" path="res://Assets/game_over.wav" id="6_gameov"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_wowpa"]
 font = ExtResource("4_3dryh")
@@ -24,14 +23,6 @@ scale = Vector2(0.64843744, 0.62777776)
 texture = ExtResource("1_qxrlw")
 centered = false
 
-[node name="SpawnTimer" type="Timer" parent="." unique_id=1135528382]
-wait_time = 2.0
-autostart = true
-
-[node name="Fox" parent="." unique_id=1159394860 instance=ExtResource("3_wrm1d")]
-z_index = 1
-position = Vector2(231, 553)
-
 [node name="ScoreLabel" type="Label" parent="." unique_id=1766124172]
 offset_left = 25.0
 offset_top = 29.0
@@ -47,3 +38,14 @@ parameters/looping = true
 
 [node name="GameOver" type="AudioStreamPlayer" parent="." unique_id=1987654321]
 stream = ExtResource("6_gameov")
+
+[node name="Pausable" type="Node" parent="." unique_id=1329609009]
+process_mode = 1
+
+[node name="SpawnTimer" type="Timer" parent="Pausable" unique_id=1135528382]
+wait_time = 2.0
+autostart = true
+
+[node name="Fox" parent="Pausable" unique_id=1159394860 instance=ExtResource("3_wrm1d")]
+z_index = 1
+position = Vector2(231, 553)

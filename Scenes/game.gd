@@ -12,16 +12,17 @@ const SPAWN_MARGIN: int = 50
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	rng.randomize()
-	if has_node("SpawnTimer"):
-		var st := $SpawnTimer
-		st.connect("timeout", Callable(self , "_spawn_dice"))
-	else:
-		_spawn_dice()
-	# connect Fox ate_dice signal to update score
-	if has_node("Fox"):
-		var fox_node := $Fox
-		if not fox_node.is_connected("ate_dice", Callable(self , "_on_fox_ate_dice")):
-			fox_node.connect("ate_dice", Callable(self , "_on_fox_ate_dice"))
+	# Pause settings configured in the TSCN; no runtime change here.
+	# Connect only to Pausable/SpawnTimer (avoid path assumptions)
+	var st := get_node_or_null("Pausable/SpawnTimer")
+	if st and st is Timer:
+		if not st.is_connected("timeout", Callable(self , "_spawn_dice")):
+			st.connect("timeout", Callable(self , "_spawn_dice"))
+
+	# Connect fox signal under Pausable
+	var fox_node := get_node_or_null("Pausable/Fox")
+	if fox_node and not fox_node.is_connected("ate_dice", Callable(self , "_on_fox_ate_dice")):
+		fox_node.connect("ate_dice", Callable(self , "_on_fox_ate_dice"))
 	# initialize score label display (shows 0000 initially)
 	_update_score_label()
 
@@ -60,22 +61,23 @@ func _on_dice_game_over() -> void:
 	pause_all()
 
 
-func pause_all(group_name: String = "stoppable") -> void:
-	# Stop the spawn timer if present (it may not be in the group)
-	if has_node("SpawnTimer") and $SpawnTimer is Timer:
-		$SpawnTimer.stop()
+func pause_all() -> void:
+	# Stop spawning and freeze active dice; Pausable subtree is managed in the TSCN.
+	# Stop the spawn timer so no new dice are created.
+	var st := get_node_or_null("Pausable/SpawnTimer")
+	if st and st is Timer:
+		st.stop()
 
-	var nodes := get_tree().get_nodes_in_group(group_name)
-	for n in nodes:
-		if n is Node:
-			# Stop Timer nodes so time-based callbacks don't continue
-			# if n is Timer:
-			# 	n.stop()
-			# Stop physics processing (Dice uses _physics_process)
-			n.set_physics_process(false)
+	# Freeze all existing dice instances (they use _physics_process for movement).
+	for child in get_children():
+		if child is Dice:
+			if child.has_method("set_physics_process"):
+				child.set_physics_process(false)
+			if child.has_method("set_process"):
+				child.set_process(false)
 
-	# Optionally pause the entire SceneTree instead of per-node processing
-	# get_tree().paused = true
+
+# Note: _pause_subtree removed — pausing is targeted to SpawnTimer and Dice instances.
 	
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
