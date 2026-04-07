@@ -8,27 +8,37 @@ var score: int = 0
 @export var score_label_path: NodePath = NodePath("")
 const SPAWN_MARGIN: int = 50
 
+# Cached node references for clarity and to avoid repeated lookups.
+@onready var spawn_timer := get_node_or_null("Pausable/SpawnTimer") as Timer
+@onready var fox_node := get_node_or_null("Pausable/Fox")
+var score_label: Label = null
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
 	rng.randomize()
-	# Pause settings configured in the TSCN; no runtime change here.
-	# Connect only to Pausable/SpawnTimer (avoid path assumptions)
-	var st := get_node_or_null("Pausable/SpawnTimer")
-	if st and st is Timer:
-		if not st.is_connected("timeout", Callable(self , "_spawn_dice")):
-			st.connect("timeout", Callable(self , "_spawn_dice"))
 
-	# Connect fox signal under Pausable
-	var fox_node := get_node_or_null("Pausable/Fox")
+	# Connect spawn timer if present.
+	if spawn_timer and not spawn_timer.is_connected("timeout", Callable(self , "_spawn_dice")):
+		spawn_timer.connect("timeout", Callable(self , "_spawn_dice"))
+
+	# Connect fox signal if present.
 	if fox_node and not fox_node.is_connected("ate_dice", Callable(self , "_on_fox_ate_dice")):
 		fox_node.connect("ate_dice", Callable(self , "_on_fox_ate_dice"))
-	# initialize score label display (shows 0000 initially)
+
+	# Resolve score label: try exported path first, then fallback to node named "ScoreLabel".
+	var maybe_label := get_node_or_null(score_label_path)
+	if maybe_label and maybe_label is Label:
+		score_label = maybe_label
+	if not score_label:
+		var fallback := get_node_or_null("ScoreLabel")
+		if fallback and fallback is Label:
+			score_label = fallback
+
 	_update_score_label()
 
 
 func spawn_dice_at(spawn_pos: Vector2) -> Dice:
-	var dice: Dice = DiceScene.instantiate()
+	var dice := DiceScene.instantiate() as Dice
 	dice.position = spawn_pos
 	dice.connect("game_over", Callable(self , "_on_dice_game_over"))
 	add_child(dice)
@@ -50,35 +60,27 @@ func _spawn_dice() -> void:
 
 
 func _on_dice_game_over() -> void:
-	# Stop background music if present
-	if has_node("Music") and $Music is AudioStreamPlayer:
-		$Music.stop()
+	var music := get_node_or_null("Music") as AudioStreamPlayer
+	if music:
+		music.stop()
 
-	# Play game over sound using the scene's persistent player
-	if has_node("GameOver") and $GameOver is AudioStreamPlayer:
-		$GameOver.play()
+	var go_player := get_node_or_null("GameOver") as AudioStreamPlayer
+	if go_player:
+		go_player.play()
 
 	pause_all()
 
 
 func pause_all() -> void:
-	# Stop spawning and freeze active dice; Pausable subtree is managed in the TSCN.
-	# Stop the spawn timer so no new dice are created.
-	var st := get_node_or_null("Pausable/SpawnTimer")
-	if st and st is Timer:
-		st.stop()
+	if spawn_timer:
+		spawn_timer.stop()
 
-	# Freeze all existing dice instances (they use _physics_process for movement).
 	for child in get_children():
 		if child is Dice:
-			if child.has_method("set_physics_process"):
-				child.set_physics_process(false)
-			if child.has_method("set_process"):
-				child.set_process(false)
+			child.set_physics_process(false)
+			child.set_process(false)
 
 
-# Note: _pause_subtree removed — pausing is targeted to SpawnTimer and Dice instances.
-	
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
@@ -90,8 +92,13 @@ func _on_fox_ate_dice(points: int) -> void:
 
 
 func _update_score_label() -> void:
-	var lbl := get_node_or_null(score_label_path)
-	if lbl == null:
-		lbl = get_node_or_null("ScoreLabel")
-	if lbl and lbl is Label:
-		lbl.text = "%04d" % score
+	if not score_label:
+		var maybe_label := get_node_or_null(score_label_path)
+		if maybe_label and maybe_label is Label:
+			score_label = maybe_label
+		else:
+			var fallback := get_node_or_null("ScoreLabel")
+			if fallback and fallback is Label:
+				score_label = fallback
+	if score_label:
+		score_label.text = "%04d" % score
