@@ -9,8 +9,7 @@ signal ate_dice(points: int)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# connect area_entered so we can detect when a Dice enters the fox area
-	if not is_connected("area_entered", Callable(self , "_on_area_entered")):
-		self.connect("area_entered", Callable(self , "_on_area_entered"))
+	connect("area_entered", Callable(self , "_on_area_entered"))
 
 
 # Physics step — move with collisions handled by Area2D overlap checks
