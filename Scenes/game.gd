@@ -6,7 +6,7 @@ var score: int = 0
 const SPAWN_MARGIN: int = 50
 
 @onready var spawn_timer: Timer = $Pausable/SpawnTimer
-@onready var fox_node: fox = $Pausable/Fox
+@onready var fox_node: Fox = $Pausable/Fox
 @onready var music: AudioStreamPlayer = $Music
 @onready var go_player: AudioStreamPlayer = $GameOver
 @onready var score_label: Label = $ScoreLabel

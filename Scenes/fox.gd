@@ -1,5 +1,5 @@
 extends Area2D
-class_name fox
+class_name Fox
 
 signal ate_dice(points: int)
 
